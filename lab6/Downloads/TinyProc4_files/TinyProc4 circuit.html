@@ -1,0 +1,48 @@
+
+<!-- saved from url=(0160)https://brightspace.binghamton.edu/content/enforced/93978-23995.202220/TinyProc4%20circuit.html?d2lSessionVal=QWGA5SfVdVsDntP1fUi3XVSCR&ou=93978&d2l_body_type=3 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>function lti_launch( vars, target ) {
+						var query = '';
+						var new_tab = false;
+
+						for(var key in vars) {
+							if(query.length == 0) {
+								query += '?' + key + '=' + encodeURIComponent(vars[key]);
+							}
+							else {
+								query += '&' + key + '=' + encodeURIComponent(vars[key]);
+							}
+						}
+
+						var url = '/d2l/customization/pearsonlti/93978/Launch' + query;(target == '_blank') ? window.open( url, '_blank' ) : location.replace( url );}</script><script src="./MathML.js"></script><script>document.addEventListener('DOMContentLoaded', function() { D2LMathML.DesktopInit('https://s.brightspace.com/lib/mathjax/2.7.4/MathJax.js?config=MML_HTMLorMML','https://s.brightspace.com/lib/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML%2cSafe','130',true); });</script><script>window.addEventListener('message', function(event) { 
+					if( !event.data ) {
+						return;
+					}
+
+					var params;
+					try {
+						params = JSON.parse( event.data );
+					}
+					catch {
+						return;
+					}
+					if( !params.subject || params.subject !== 'lti.frameResize' ) {
+						return;
+					}
+
+					const MAX_FRAME_HEIGHT = 10000
+					if( !params.height || params.height < 1 || params.height > MAX_FRAME_HEIGHT ) {
+						console.warn( 'Invalid height value received, aborting' );
+						return;
+					}
+					var el = document.getElementsByTagName( 'iframe' );
+					for ( var i=0; i < el.length; i++ ) {
+						if( el[i].contentWindow === event.source ) {
+							el[i].style.height = params.height + 'px';
+							el[i].style.width = '100%';
+							console.info( 'Setting iFrame height to ' + params.height );
+							console.info( 'Setting iFrame width to 100%' );
+						}
+					}
+				});</script></head><body style="overflow-y: hidden;"><p>The simple almost-processor TinyProc4 (the number keeps changing, when I tweak things a bit)</p> 
+<p><a href="https://www.cs.binghamton.edu/~pmadden/tinyproc4.circ" target="_blank" rel="noreferrer noopener">https://www.cs.binghamton.edu/~pmadden/tinyproc4.circ</a></p> 
+<p>Depending on your browser, you might need to right-click and "save link as."</p></body></html>

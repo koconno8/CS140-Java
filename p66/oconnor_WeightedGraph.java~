@@ -1,0 +1,209 @@
+import java.util.ArrayList;
+import java.util.*;
+import java.util.HashSet;
+import java.util.ArrayDeque;
+
+public class oconnor_WeightedGraph implements WeightedGraphFunctions
+{
+    private final ArrayList<Integer> vertices;
+	private final ArrayList<EdgeWithWeight> edges;
+	
+	//private boolean debugOutput = false;
+
+	private int[] parent; 
+	private VertexWithWeight[] verticeCost; 
+	private java.util.PriorityQueue<VertexWithWeight> minPriorityQueueByWeight;
+	
+	public oconnor_WeightedGraph()
+	{
+		vertices = new ArrayList<>();
+		edges = new ArrayList<>();
+		parent = new int[vertices.size()]; 
+		verticeCost = new VertexWithWeight[vertices.size()];
+		minPriorityQueueByWeight = new java.util.PriorityQueue<>(new VertexWithWeightWeightComparator());
+	}
+
+//need to update these
+	public boolean hasPath(int fromVertex, int toVertex)
+    {
+        return false;
+    }
+
+	public double getMinimumWeight(int fromVertex, int toVertex)
+    {
+        return Double.NaN;
+    }
+
+	public EdgeWithWeight[] getPath(int fromVertex, int toVertex)
+    {
+        return new EdgeWithWeight[0];
+    }
+
+	public int getIndex(Integer v)
+	{
+		for(int i = 0; vertices.size() > i; i++)
+		{
+			if(vertices.get(i) == v)
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private Object getPath(int fromVertex, int toVertex, WeightedGraphReturnType typeOfInfo)
+	{
+		int fromVertexIndex = vertices.indexOf(fromVertex);
+		for( int i = 0; i < vertices.size(); i++ )
+    	{
+			parent[i] = -1;
+			verticeCost[i] = new VertexWithWeight(vertices.get(i), Double.POSITIVE_INFINITY);
+   		}
+    	parent[fromVertexIndex] = fromVertex;
+    	verticeCost[fromVertexIndex] = new VertexWithWeight(vertices.get(fromVertexIndex), 0.0);
+
+    	for(int i = 0; i < vertices.size(); i++)
+   		{
+        	minPriorityQueueByWeight.add(verticeCost[i]);
+    	}
+
+    	while(minPriorityQueueByWeight.size() > 0)
+    	{
+			VertexWithWeight wgt = minPriorityQueueByWeight.poll();
+        	int v = wgt.getVertex();
+        	if(parent[v] == -1)
+        	{
+        	    break;
+        	}
+       		if(toVertex == v)
+        	{
+        	    break;
+        	}
+        
+        	for(int i = 0; edges.size() > i; i++)
+        	{
+				EdgeWithWeight currentEdge = edges.get(i);
+            	if(currentEdge.getFromVertex() == v)
+            	{
+               		int u = currentEdge.getFromVertex();
+					if(verticeCost[vertices.indexOf(v)].getWeight() + currentEdge.getWeight() < verticeCost[vertices.indexOf(u)].getWeight())
+					{
+						minPriorityQueueByWeight.remove(verticeCost[getIndex(u)].getWeight());
+						verticeCost[getIndex(u)].setWeight(wgt.getWeight() + currentEdge.getWeight());
+						minPriorityQueueByWeight.add(verticeCost[getIndex(u)]);
+						parent[getIndex(u)] = v;
+
+						/* Update the cost to get to u
+						1. Remove the VertexWithWeight for u from minPriorityQueueByWeight
+						2. Update the weight/cost for u to cost of v + edge weight of the current
+						edge
+						3. Add the updated VertexWithWeight for u back into
+						minPriorityQueueByWeight
+						4. Update the parent of u to be v */
+					}
+            	}
+        	}
+    	}
+		if(parent[toVertex] == -1) //not sure if toVertex goes in there page 6 instructions
+		{
+			//break from the while loop
+		}
+		int p = toVertex;
+
+		ArrayList<Integer> reversePath = new ArrayList<>();
+		ArrayList<Integer> forwardPath = new ArrayList<>();
+		while ( p != fromVertex )
+		{
+			p = parent[vertices.indexOf(p)];
+			reversePath.add(p);
+		}
+
+		for( int i = reversePath.size()-1; i >= 0; i-- )
+		{
+			forwardPath.add(reversePath.get(i));
+		}
+
+		EdgeWithWeight[] eww = new EdgeWithWeight[forwardPath.size()];
+		for(int i=0; forwardPath.size()-1 > i; i++)
+		{
+			int fromVertex1 = forwardPath.get(i).intValue();
+			int toVertex1 = forwardPath.get(i+1).intValue();
+			for(int j = 0; edges.size() > j; j++)
+			{
+				if(edges.get(i).getFromVertex() == fromVertex1 && edges.get(i).getFromVertex() == toVertex1)
+				{
+					eww[i] = edges.get(i);
+				}
+			}
+		}
+		return eww;
+	}
+
+	public boolean addVertex(int v) //throws GraphException
+    {
+        if(vertices.contains(v))
+		{
+			return false;
+		}
+		else
+		{
+			vertices.add(v);
+		}
+		return true;
+    }
+
+
+	public boolean addWeightedEdge(int from, int to, double weight) //throws GraphException
+    {
+        EdgeWithWeight weightedEdge1 = new EdgeWithWeight(from, to, weight);
+
+		//Your program should also throw a GraphException, and not add the edge, when adding edge (u, v) if either of the vertices u or v do not exist in the list of vertices.
+		if(!(vertices.contains(from) && vertices.contains(to)))
+		{
+			return false;
+		}
+
+		else 
+		{
+			for(int j = 0; j < edges.size(); j++)
+			{
+				EdgeWithWeight currentEdge = edges.get(j);
+				//put code here to work w current edge
+
+				if(currentEdge.getFromVertex() == from && currentEdge.getToVertex() == to)
+				{
+					return false;
+				}
+			}
+			edges.add(weightedEdge1);
+		}	
+		return true;
+	}
+
+
+	public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+		sb.append("G = (V, E)\n");
+		
+		sb.append("V = {");
+		for(int i = 0; i < vertices.size() - 1; i++)
+		{
+			sb.append(vertices.get(i) + ",");
+		}
+		//since the last one does not have a comma after it, I added it outside
+		sb.append(vertices.get(vertices.size()-1) + "}\n");
+		
+		sb.append("E = {");
+		for(int i = 0; i < edges.size() - 1; i++)
+		{
+			sb.append(edges.get(i) + ",");
+		}
+		//since the last one does not have a comma after it, I added it outside
+		sb.append(edges.get(edges.size() - 1) + "}\n");
+		
+		return sb.toString();
+    }
+	
+}
+

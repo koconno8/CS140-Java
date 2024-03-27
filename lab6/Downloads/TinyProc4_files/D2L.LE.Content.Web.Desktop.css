@@ -1,0 +1,20 @@
+#ContentNavigator .vui-list > li {
+	border-top-color: var(--d2l-color-mica);
+	padding: 0 5px 0 5px;
+}
+
+#ContentNavigator .vui-list > li:last-child {
+	border-bottom: 1px solid var(--d2l-color-mica);
+}
+
+#ContentNavigator .vui-list > .vui-selected {
+	background: var(--d2l-color-gypsum);
+}
+
+.d2l-topic-view .d2l-contextmenu-ph-dropdown {
+	padding-top: 3px;
+}
+
+.d2l-completion-flyout {
+    margin: 0px 0rem 0px 0.13rem;
+}
